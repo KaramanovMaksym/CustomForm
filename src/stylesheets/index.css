@@ -13,3 +13,69 @@ body {
 .invalid-feedback {
   display: block; 
 }
+
+.error-input {
+border-color: red;
+border-width: 5px;
+}
+
+.show-phases{
+  display: flex;
+  justify-content: space-around;
+}
+
+.phase{
+  display: flex;
+  flex-direction: column;                                                                                                                                                                                                                                                                                                                                                                                                                          
+  text-align: center;
+  align-items: center;
+  flex-grow: 1; 
+  position: relative;
+}
+
+.phase>:first-child{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fdfdfd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: #c2c1c1;
+  border: 6px solid #ffffff;
+}
+.phase:not(:first-child):before {
+  height: 4px;
+  width: 100%;
+  left: -50%;
+  top: 30%;
+  content: " ";
+  display: block;
+  position: absolute;
+  background: #c2c1c1; 
+  z-index: -1; 
+}
+
+.phase.now:not(:first-child):before{
+  background: #fcbc31;
+}
+.phase.finished:not(:first-child):before{
+  background: #fcbc31;
+}
+
+.now>:first-child{
+  background-color: #00ffff;
+  border: 6px solid #fcbc31;
+}
+
+.finished>:first-child{
+  background-color: #fcbc31;
+  border: 6px solid #fcbc31;
+}
+
+.phase>:last-child{
+  font-weight: bold;
+}
+
+
+
