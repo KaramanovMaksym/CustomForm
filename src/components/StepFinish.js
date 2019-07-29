@@ -2,7 +2,7 @@ import React from 'react'
 import countries from '../data/countries'
 import cities from '../data/cities'
 
-const Form4 = props => {
+const StepFinish = props => {
   const { stateGlobal } = props
   // debugger
   return (
@@ -34,4 +34,4 @@ const Form4 = props => {
   )
 }
 
-export default Form4
+export default StepFinish

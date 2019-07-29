@@ -366,15 +366,9 @@ export default class App extends React.Component {
 
   resetState = (saveData, errors, success) => {
     for (let key in saveData) {
-<<<<<<< HEAD
       if (key === 'gender') {
         saveData[key] = 'male'
       } else if (key === 'country'){
-=======
-      if (key == 'gender') {
-        saveData[key] = 'male'
-      } else if (key == 'country'){
->>>>>>> 45aac18691448c90ca0d0848e0cd81d84e247401
         saveData[key] = '1'
       } else {
         saveData[key] = ''

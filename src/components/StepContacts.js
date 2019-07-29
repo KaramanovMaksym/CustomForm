@@ -3,7 +3,7 @@ import TextField from './TextField'
 import countries from '../data/countries'
 import cities from '../data/cities'
 
-const Form2 = props => {
+const StepContacts = props => {
   const { stateGlobal, onChange, getOptionsItem, takeListCities } = props
 
   return (
@@ -62,4 +62,4 @@ const Form2 = props => {
   )
 }
 
-export default Form2
+export default StepContacts

@@ -1,7 +1,7 @@
 import React from 'react'
 import TextField from './TextField'
 
-const Form1 = props => {
+const StepBasic = props => {
   const {
     stateGlobal,
     onChange
@@ -85,4 +85,4 @@ const Form1 = props => {
   );
 }
 
-export default Form1
+export default StepBasic

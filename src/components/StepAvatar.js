@@ -1,7 +1,7 @@
 import React from 'react'
 import defaultImage from '../images.png'
 
-const Form3 = props => {
+const StepAvatar = props => {
   const { stateGlobal, onChangeAvatar } = props
 
   return (
@@ -33,4 +33,4 @@ const Form3 = props => {
   )
 }
 
-export default Form3
+export default StepAvatar
