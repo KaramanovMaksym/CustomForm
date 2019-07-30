@@ -13,14 +13,14 @@ const FormSwitcher = props => {
     takeListCities
   } = props
 
-  if (stateGlobal.currentForm === 'Basic') {
+  if (stateGlobal.currentForm === 1) {
     return (
       <StepBasic
         stateGlobal={stateGlobal}
         onChange={onChange}
       />
     )
-  } else if (stateGlobal.currentForm === 'Contacts') {
+  } else if (stateGlobal.currentForm === 2) {
     return (
       <StepContacts
         stateGlobal={stateGlobal}
@@ -29,14 +29,14 @@ const FormSwitcher = props => {
         takeListCities={takeListCities}
       />
     )
-  } else if (stateGlobal.currentForm === 'Avatar') {
+  } else if (stateGlobal.currentForm === 3) {
     return (
       <StepAvatar
         stateGlobal={stateGlobal}
         onChangeAvatar={onChangeAvatar}
       />
     )
-  } else if (stateGlobal.currentForm === 'Finish') {
+  } else if (stateGlobal.currentForm === 4) {
     return (
       <StepFinish
         stateGlobal={stateGlobal}

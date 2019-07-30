@@ -1,12 +1,13 @@
 import React from 'react'
 import FormSwitcher from './FormSwitcher'
+import Steps from './Steps'
 
 export default class App extends React.Component {
   constructor() {
     super()
 
     this.state = {
-      currentForm: 'Basic',
+      currentForm: 1,
       listForms: ['Basic', 'Contacts', 'Avatar', 'Finish'],
 
       saveData: {
@@ -73,9 +74,8 @@ export default class App extends React.Component {
     const saveData = { ...this.state.saveData }
     const errors = { ...this.state.errors }
     const success = { ...this.state.success }
-    
-    
     const resetNavigationClass = document.getElementsByClassName('phase')
+
     for (let i = 0; i < resetNavigationClass.length; i++) {
       if (i === 0 || i === resetNavigationClass.length - 1) {
         resetNavigationClass[i].classList.remove('finished')
@@ -86,7 +86,6 @@ export default class App extends React.Component {
     }
 
     this.resetState(saveData, errors, success)
-    
   }
 
   onChange = event => {
@@ -114,24 +113,10 @@ export default class App extends React.Component {
     return (
       <div className='form-container card'>
         <form className='form card-body'>
-          <div className='show-phases mb-5'>
-            <div className='phase now'>
-              <div>1</div>
-              <div>{this.state.listForms[0]}</div>
-            </div>
-            <div className='phase'>
-              <div>2</div>
-              <div>{this.state.listForms[1]}</div>
-            </div>
-            <div className='phase'>
-              <div>3</div>
-              <div>{this.state.listForms[2]}</div>
-            </div>
-            <div className='phase'>
-              <div>4</div>
-              <div>{this.state.listForms[3]}</div>
-            </div>
-          </div>
+          <Steps
+            listForms={this.state.listForms}
+            currentForm={this.state.currentForm}
+          />
 
           <FormSwitcher
             stateGlobal={this.state}
@@ -190,7 +175,7 @@ export default class App extends React.Component {
   conditiondFieldValidation = (name, saveData) => {
     // debugger
     switch (this.state.currentForm) {
-      case 'Basic':
+      case 1:
         switch (name) {
           case 'firstname':
           case 'lastname':
@@ -204,7 +189,7 @@ export default class App extends React.Component {
         }
         break
 
-      case 'Contacts':
+      case 2:
         switch (name) {
           case 'email': {
             const reg = /[a-z]+?@\w+?\.(ua)|(com)|(ru)|(gov)/
@@ -226,7 +211,7 @@ export default class App extends React.Component {
         }
         break
         
-      case 'Avatar':
+      case 3:
         switch (name) {
           case 'avatar':
             return this.state.saveData.avatar === ''
@@ -301,30 +286,13 @@ export default class App extends React.Component {
   }
 
   changePhase = isNext => {
-    const x = document.getElementsByClassName('phase')
-    if (isNext) {
-      for (let i = 0; i < x.length; i++) {
-        if (x[i].classList.contains('now')) {
-          x[i].classList.toggle('now')
-          if (i !== x.length) {
-            x[i + 1].classList.add('now')
-            x[i].classList.toggle('finished')
-          }
-          break
-        }
-      }
+    let nextForm = this.state.currentForm
+    if (isNext){
+      nextForm++
     } else {
-      for (let i = 0; i < x.length; i++) {
-        if (x[i].classList.contains('now')) {
-          x[i].classList.toggle('now')
-          if (i !== 0) {
-            x[i - 1].classList.add('now')
-            x[i - 1].classList.toggle('finished')
-          }
-          break
-        }
-      }
+      nextForm--
     }
+    this.setState({currentForm: nextForm})
   }
 
   btnSwitcher = currentForm => {
