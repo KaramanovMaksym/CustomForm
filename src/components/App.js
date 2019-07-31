@@ -1,6 +1,9 @@
 import React from 'react'
-import FormSwitcher from './FormSwitcher'
 import Steps from './Steps'
+import StepBasic from './StepBasic'
+import StepContacts from './StepContacts'
+import StepAvatar from './StepAvatar'
+import StepFinish from './StepFinish'
 
 export default class App extends React.Component {
   constructor() {
@@ -117,14 +120,33 @@ export default class App extends React.Component {
             listForms={this.state.listForms}
             currentForm={this.state.currentForm}
           />
-
-          <FormSwitcher
-            stateGlobal={this.state}
-            onChange={this.onChange}
-            getOptionsItem={this.getOptionsItem}
-            takeListCities={this.takeListCities}
-            onChangeAvatar={this.onChangeAvatar}
-          />
+          {
+            (this.state.currentForm === 1) && 
+              <StepBasic
+                stateGlobal={this.state}
+                onChange={this.onChange}
+              /> 
+          }
+          {
+            (this.state.currentForm === 2) &&
+              <StepContacts
+                stateGlobal={this.state}
+                onChange={this.onChange}
+              />
+          }
+          {
+            (this.state.currentForm === 3) &&
+              <StepAvatar
+                stateGlobal={this.state}
+                onChangeAvatar={this.onChangeAvatar}
+              />
+          }
+          {
+            (this.state.currentForm === 4) &&
+              <StepFinish
+                stateGlobal={this.state}
+              />
+          }
 
           {this.btnSwitcher(this.state.currentForm)}
         </form>
