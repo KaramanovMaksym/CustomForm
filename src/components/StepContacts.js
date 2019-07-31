@@ -3,8 +3,27 @@ import TextField from './TextField'
 import countries from '../data/countries'
 import cities from '../data/cities'
 
-const StepContacts = props => {
-  const { stateGlobal, onChange, getOptionsItem, takeListCities } = props
+const StepFinish = props => {
+  const { stateGlobal, onChange } = props
+
+  const takeListCities = cities => {
+    let x = [{ id: 0, name: 'Select city' }]
+    for (let key in cities) {
+      if (cities[key].country === parseInt(stateGlobal.saveData.country)) {
+        let obj = { id: key, name: cities[key].name }
+        x.push(obj)
+      }
+    }
+    return x
+  }
+  
+  const getOptionsItem = items => {
+    return items.map(item => (
+      <option key={item.id} value={item.id}>
+        {item.name}
+      </option>
+    ))
+  }
 
   return (
     <div className='form-group ml-1'>
@@ -62,4 +81,4 @@ const StepContacts = props => {
   )
 }
 
-export default StepContacts
+export default StepFinish

@@ -4,15 +4,16 @@ import StepBasic from './StepBasic'
 import StepContacts from './StepContacts'
 import StepAvatar from './StepAvatar'
 import StepFinish from './StepFinish'
+import ButtonsNextPrev from './ButtonsNextPrev'
 
 export default class App extends React.Component {
   constructor() {
     super()
-
+    
     this.state = {
       currentForm: 1,
       listForms: ['Basic', 'Contacts', 'Avatar', 'Finish'],
-
+      
       saveData: {
         firstname: 'Maksym',
         lastname: 'Karamanov',
@@ -25,7 +26,7 @@ export default class App extends React.Component {
         city: '',
         avatar: ''
       },
-
+      
       success: {
         Basic: true,
         Contacts: false,
@@ -49,46 +50,70 @@ export default class App extends React.Component {
 
   onSubmitNext = event => {
     event.preventDefault()
+    const CURRENT_FORM = this.state.currentForm
     const errors = { ...this.state.errors }
 
     this.checkIsValidAll(this.state.saveData, errors)
-
-    if (this.checkIsError(errors)) {
+    debugger
+    if (this.checkIsErrors(errors)) {
       this.setState({ errors })
     } else {
       let success = { ...this.state.success }
-      this.goNextPreviusForm(success, true)
-      this.setState({ errors })
-      this.setState({ success })
+      success[this.state.listForms[CURRENT_FORM]] = true
+      this.changeCurrentForm(this.state.listForms[CURRENT_FORM])
+      this.setState({ errors, success })
       this.changePhase(true)
     }
   }
 
   onSubmitPrevius = event => {
     event.preventDefault()
+    const CURRENT_FORM = this.state.currentForm
     const success = { ...this.state.success }
-    this.goNextPreviusForm(success, false)
+
+    success[this.state.listForms[CURRENT_FORM-1]] = false
+    this.changeCurrentForm(this.state.listForms[CURRENT_FORM-1])
     this.setState({ success })
     this.changePhase(false)
   }
 
   onSubmitReset = event => {
     event.preventDefault()
-    const saveData = { ...this.state.saveData }
-    const errors = { ...this.state.errors }
-    const success = { ...this.state.success }
-    const resetNavigationClass = document.getElementsByClassName('phase')
-
-    for (let i = 0; i < resetNavigationClass.length; i++) {
-      if (i === 0 || i === resetNavigationClass.length - 1) {
-        resetNavigationClass[i].classList.remove('finished')
-        resetNavigationClass[i].classList.toggle('now')
-      } else {
-        resetNavigationClass[i].classList.remove('finished')
+    this.setState(
+      {
+        currentForm: 1,
+        listForms: ['Basic', 'Contacts', 'Avatar', 'Finish'],
+        saveData: {
+          firstname: 'Maksym',
+          lastname: 'Karamanov',
+          password: '123456',
+          repeatPassword: '123456',
+          gender: 'male',
+          email: '',
+          mobile: '',
+          country: '1',
+          city: '',
+          avatar: ''
+        },
+        success: {
+          Basic: true,
+          Contacts: false,
+          Avatar: false,
+          Finish: false
+        },
+        errors: {
+          firstname: null,
+          lastname: null,
+          password: null,
+          repeatPassword: null,
+          gender: null,
+          email: null,
+          phone: null,
+          city: null,
+          avatar: null
+        }
       }
-    }
-
-    this.resetState(saveData, errors, success)
+    ) 
   }
 
   onChange = event => {
@@ -147,32 +172,15 @@ export default class App extends React.Component {
                 stateGlobal={this.state}
               />
           }
-
-          {this.btnSwitcher(this.state.currentForm)}
+          <ButtonsNextPrev
+            currentForm={this.state.currentForm}
+            onSubmitNext={this.onSubmitNext}
+            onSubmitPrevius={this.onSubmitPrevius}
+            onSubmitReset={this.onSubmitReset}
+          />
         </form>
       </div>
     )
-  }
-
-  getOptionsItem = items => {
-    // debugger
-    return items.map(item => (
-      <option key={item.id} value={item.id}>
-        {item.name}
-      </option>
-    ))
-  }
-  
-  takeListCities = cities => {
-    let x = [{ id: 0, name: 'Select city' }]
-
-    for (let key in cities) {
-      if (cities[key].country === parseInt(this.state.saveData.country)) {
-        let obj = { id: key, name: cities[key].name }
-        x.push(obj)
-      }
-    }
-    return x
   }
 
   textFieldValidation = name => {
@@ -246,31 +254,7 @@ export default class App extends React.Component {
     }
   }
 
-  goNextPreviusForm = (success, isNext) => {
-    // debugger
-    let nameNextForm = ''
-    if (isNext) {
-      for (let i = 0; i < this.state.listForms.length - 1; i++) {
-        if (this.state.currentForm === this.state.listForms[i]) {
-          nameNextForm = this.state.listForms[i + 1]
-          success[nameNextForm] = true
-          this.changeCurrentForm(nameNextForm)
-          break
-        }
-      }
-    } else {
-      for (let i = 0; i < this.state.listForms.length; i++) {
-        if (this.state.currentForm === this.state.listForms[i]) {
-          nameNextForm = this.state.listForms[i - 1]
-          break
-        }
-      }
-      success[this.state.currentForm] = false
-      this.changeCurrentForm(nameNextForm)
-    }
-  }
-
-  checkIsError = errors => {
+  checkIsErrors = errors => {
     // debugger
     for (let key in errors) {
       if (errors[key] !== null) {
@@ -316,71 +300,4 @@ export default class App extends React.Component {
     }
     this.setState({currentForm: nextForm})
   }
-
-  btnSwitcher = currentForm => {
-    if (currentForm !== this.state.listForms[this.state.listForms.length - 1]) {
-      return (
-        <div className='d-flex justify-content-center'>
-          <button
-            type='button'
-            className='btn btn-light mr-3'
-            disabled={!this.state.success.Contacts}
-            onClick={this.onSubmitPrevius}
-          >
-            Previous
-          </button>
-
-          <button
-            type='button'
-            className='btn btn-secondary'
-            onClick={this.onSubmitNext}
-          >
-            Next
-          </button>
-        </div>
-      )
-    } else {
-      return (
-        <div className='d-flex justify-content-center'>
-          <button
-            type='button'
-            className='btn btn-secondary'
-            onClick={this.onSubmitReset}
-          >
-            Reset
-          </button>
-        </div>
-      )
-    }
-  }
-
-  resetState = (saveData, errors, success) => {
-    for (let key in saveData) {
-      if (key === 'gender') {
-        saveData[key] = 'male'
-      } else if (key === 'country'){
-        saveData[key] = '1'
-      } else {
-        saveData[key] = ''
-      }
-    }
-    for (let key in errors) {
-      errors[key] = null
-    }
-    for (let key in success) {
-      if (key === 'Basic') {
-        success[key] = true
-      } else {
-        success[key] = false
-      }
-    }
-
-    this.setState({
-      currentForm: 'Basic',
-      saveData,
-      errors,
-      success
-    })
-  }
-  
 }
