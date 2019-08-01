@@ -65,7 +65,7 @@ const StepFinish = props => {
       <div className='form-group'>
         <label htmlFor='city'>City</label>
         <select
-          className='form-control'
+          className={stateGlobal.errors.city ? 'form-control border-danger' : 'form-control'}
           id='city'
           name='city'
           value={stateGlobal.saveData.city}

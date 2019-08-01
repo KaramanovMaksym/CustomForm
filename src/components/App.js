@@ -51,10 +51,8 @@ export default class App extends React.Component {
   onSubmitNext = event => {
     event.preventDefault()
     const CURRENT_FORM = this.state.currentForm
-    const errors = { ...this.state.errors }
+    const errors = this.checkIsValidAll()
 
-    this.checkIsValidAll(this.state.saveData, errors)
-    debugger
     if (this.checkIsErrors(errors)) {
       this.setState({ errors })
     } else {
@@ -117,11 +115,11 @@ export default class App extends React.Component {
   }
 
   onChange = event => {
-    // debugger
-    if ((event.target.type !== 'radio')) {
-      this.setBorderDefault(event.target.name)
-    }
     const saveData = { ...this.state.saveData }
+
+    if ((event.target.name === 'country')) {
+      saveData.city = ''
+    }
     saveData[event.target.name] = event.target.value
     this.setState({ saveData })
   }
@@ -204,16 +202,23 @@ export default class App extends React.Component {
 
   conditiondFieldValidation = (name, saveData) => {
     // debugger
+    let errorText = null
     switch (this.state.currentForm) {
       case 1:
         switch (name) {
           case 'firstname':
           case 'lastname':
-            return saveData[name].length < 5
+            (saveData[name].length < 5) 
+            && (errorText = this.textFieldValidation(name))
+            break
           case 'password':
-            return saveData[name].length < 6
+            (saveData[name].length < 6) 
+            && (errorText = this.textFieldValidation(name))
+            break
           case 'repeatPassword':
-            return saveData[name] !== saveData.password
+            (saveData[name] !== saveData.password) 
+            && (errorText = this.textFieldValidation(name))
+            break
           default:
             break
         }
@@ -221,21 +226,22 @@ export default class App extends React.Component {
 
       case 2:
         switch (name) {
-          case 'email': {
+          case 'email':{
             const reg = /[a-z]+?@\w+?\.(ua)|(com)|(ru)|(gov)/
-            return !reg.test(this.state.saveData.email)
+            !(reg.test(this.state.saveData.email))
+            && (errorText = this.textFieldValidation(name))
+            break
           }
-          case 'mobile': {
+          case 'mobile':{
             const reg = /^\d{10}$/
-            return !reg.test(this.state.saveData.mobile)
+            !(reg.test(this.state.saveData.mobile)) 
+            && (errorText = this.textFieldValidation(name))
+            break
           }
-          case 'city': {
-            // debugger
-            return !(
-              this.state.saveData.city !== '0' &&
-              this.state.saveData.city !== ''
-            )
-          }
+          case 'city':
+            !(this.state.saveData.city !== '0' && this.state.saveData.city !== '') 
+            && (errorText = this.textFieldValidation(name))
+            break
           default:
             break
         }
@@ -244,7 +250,9 @@ export default class App extends React.Component {
       case 3:
         switch (name) {
           case 'avatar':
-            return this.state.saveData.avatar === ''
+            (this.state.saveData.avatar === '')
+            && (errorText = this.textFieldValidation(name))
+            break
           default:
             break
         }
@@ -252,6 +260,8 @@ export default class App extends React.Component {
       default:
         break
     }
+
+    return errorText
   }
 
   checkIsErrors = errors => {
@@ -264,16 +274,14 @@ export default class App extends React.Component {
     return false
   }
 
-  checkIsValidAll = (saveData, errors) => {
-    // debugger
+  checkIsValidAll = () => {
+    const saveData = this.state.saveData
+    const errors = {}
     for (let name in saveData) {
-      if(this.conditiondFieldValidation(name, saveData)){
-        (errors[name] = this.textFieldValidation(name))
-        this.setBorderRed(name)
-      } else {
-        (errors[name] = null)
-      }
+      errors[name] = this.conditiondFieldValidation(name, saveData)
     }
+
+    return errors
   }
 
   changeCurrentForm = nameNextForm => {
@@ -281,14 +289,6 @@ export default class App extends React.Component {
     this.setState({
       currentForm: nameNextForm
     })
-  }
-
-  setBorderRed = idName => {
-    document.getElementById(idName).classList.add('border-danger')
-  }
-
-  setBorderDefault = idName => {
-    document.getElementById(idName).classList.remove('border-danger')
   }
 
   changePhase = isNext => {

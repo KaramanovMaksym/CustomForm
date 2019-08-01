@@ -24,7 +24,7 @@ const TextField = props => {
         labeltext={labelText}
         onChange={onChange}
         error={error}
-        className='form-control'
+        className={error ? 'form-control border-danger' : 'form-control'}
       />
     
       {
